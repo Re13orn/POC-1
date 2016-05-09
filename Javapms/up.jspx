@@ -1,0 +1,79 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" version="1.2">
+    <jsp:directive.page contentType="text/html" pageEncoding="utf-8"/>
+    <jsp:directive.page import="java.io.*"/>
+	<jsp:directive.page import="java.util.*"/>
+	<jsp:directive.page import="javax.servlet.*"/>
+	<jsp:directive.page import="javax.servlet.http.*"/>
+<html><head><title>upFile</title></head>
+<body bgcolor="#ffffff">
+<jsp:scriptlet>
+int MAX_SIZE = 102400 * 102400;
+String rootPath;
+DataInputStream in = null;
+FileOutputStream fileOut = null;
+String remoteAddr = request.getRemoteAddr();
+String serverName = request.getServerName();
+String realPath = request.getRealPath(serverName);
+realPath = realPath.substring(0,realPath.lastIndexOf("\\"));
+rootPath = realPath + "\\upload\\";
+String contentType = request.getContentType();
+try{
+if(contentType.indexOf("multipart/form-data") >= 0){
+in = new DataInputStream(request.getInputStream());
+int formDataLength = request.getContentLength();
+if(formDataLength > MAX_SIZE){
+out.println("No more than" + MAX_SIZE + "");
+return;
+}
+byte dataBytes[] = new byte[formDataLength];
+int byteRead = 0;
+int totalBytesRead = 0;
+while(totalBytesRead != formDataLength){
+byteRead = in.read(dataBytes,totalBytesRead,formDataLength);
+totalBytesRead += byteRead;
+}
+String file = new String(dataBytes);
+//out.println(file);
+String saveFile = file.substring(file.indexOf("filename=\"") + 10);
+saveFile = saveFile.substring(0,saveFile.indexOf("\n"));
+saveFile = saveFile.substring(saveFile.lastIndexOf("\\") + 1,saveFile.indexOf("\""));
+int lastIndex = contentType.lastIndexOf("=");
+String boundary = contentType.substring(lastIndex + 1,contentType.length());
+String fileName = rootPath + saveFile;
+//out.print(fileName);
+int pos;
+pos = file.indexOf("filename=\"");
+pos = file.indexOf("\n",pos) + 1;
+pos = file.indexOf("\n",pos) + 1;
+pos = file.indexOf("\n",pos) + 1;
+int boundaryLocation = file.indexOf(boundary,pos) - 4;
+//out.println(boundaryLocation);
+int startPos = ((file.substring(0,pos)).getBytes()).length;
+//out.println(startPos);
+int endPos = ((file.substring(0,boundaryLocation)).getBytes()).length;
+//out.println(endPos);
+File checkFile = new File(fileName);
+if(checkFile.exists()){
+out.println("" + saveFile + "already exist.");
+}
+File fileDir = new File(rootPath);
+if(!fileDir.exists()){
+fileDir.mkdirs();
+}
+fileOut = new FileOutputStream(fileName);
+fileOut.write(dataBytes,startPos,(endPos - startPos));
+fileOut.close();
+out.println(saveFile + "succeed.");
+}else{
+String content = request.getContentType();
+out.println("error:multipart/form-data");
+}
+}catch(Exception ex){
+throw new ServletException(ex.getMessage());
+}
+</jsp:scriptlet>
+</body>
+</html>
+</jsp:root>
